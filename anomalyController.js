@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router(); // add this controller as router.
 const modelController = require("./modelController");
+const DataBaseUtils = require("./utilsDB");
 const collectionModel = require("./modelsModel")
 const clients = modelController.clients;   // obtain the map of the clients.
 const ERROR_400 = 400;
-
 
 class FeaturesWrapper {
     constructor(features) {
@@ -56,14 +56,8 @@ router.route("/")
         let modelId = req.query.model_id;       // obtain id from query
         //let client = clients.get(modelId);      // get client from the clients map. use later in the code to connect to the algo server !
         let predictData = req.body.predict_data;        // obtain clients data from request
-        let model;
-        //extract model from the database
-        collectionModel.findOne({model_id : modelId} , (error, foundModel) => {
-            if (foundModel) {
-                model = foundModel;
-            }
-        });
-        console.log(model);
+        let model = DataBaseUtils.find(modelId);        // obtain model from the database
+       // console.log(model);
         let modelStatus = model.status;     // extract the status of the model
         let ready = modelStatus === "ready";        // verify model status
         let requestFeatures = Object.keys(predictData);      // obtain the names of the attributes from the request
