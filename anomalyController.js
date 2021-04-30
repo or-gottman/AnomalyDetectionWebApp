@@ -1,26 +1,11 @@
 const express = require("express");
 const router = express.Router(); // add this controller as router.
-var modelController = require("./modelController");
-
-var modelsModel = require("./modelsModel");
+const modelController = require("./modelController");
+const collectionModel = require("./modelsModel")
 const clients = modelController.clients;   // obtain the map of the clients.
 const ERROR_400 = 400;
 
-/**
- * extracts model from the database (returns as promise)
- * @param modelId
- * @returns {Promise<*>}
- */
-const findModelById = async(modelId) => {
-    let model = await modelsModel.find({      // Obtain model from the database
-        model_id: modelId       // filter by id.
-    });
-    return model[0];
-}
 
-/**
- * Wrapper class for the attribute list
- */
 class FeaturesWrapper {
     constructor(features) {
         this.features = features;
@@ -33,9 +18,6 @@ class FeaturesWrapper {
     }
 }
 
-/**
- * class span
- */
 class Span
 {
     constructor(start, end) {
@@ -55,6 +37,7 @@ const createAnomalies = function(timeSteps){
     return map;
 };
 
+
 class Anomaly {
     constructor(map, reason) {
         this.anomalies = map;
@@ -69,18 +52,16 @@ router.use(bodyParser.json())
 
 router.route("/")
     // POST "/api/anomaly"
-    // must declare as async because - when pulling data from database need to return value from the promise!
-    .post(async function (req, res) {
+    .post( function (req, res) {
         let modelId = req.query.model_id;       // obtain id from query
         //let client = clients.get(modelId);      // get client from the clients map. use later in the code to connect to the algo server !
         let predictData = req.body.predict_data;        // obtain clients data from request
         let model;
-        try {
-            model = await findModelById(modelId);
-        }
-        catch(err){
-            console.log(err);
-        }
+        collectionModel.findOne({model_id : modelId} , (error, foundModel) => {
+            if (foundModel) {
+                model = foundModel;
+            }
+        });
         console.log(model);
         let modelStatus = model.status;     // extract the status of the model
         let ready = modelStatus === "ready";        // verify model status
