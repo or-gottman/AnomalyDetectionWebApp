@@ -9,7 +9,7 @@ let modelsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    date: Date,
+    date: String,
     features: Array,
     status: {
         type: String,
