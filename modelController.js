@@ -34,7 +34,10 @@ const createClient = function () {
     let host = "127.0.0.1";
 
     // add new client to clients-map use "modelID" as key
-    clients.set(modelID, client.connect(port, host));
+    // NEED TO USE IT WHEN THERE IS ACTUAL SERVER
+    // clients.set(modelID, client.connect(port, host));
+
+    clients.set(modelID, client);
 
     return modelID; // return unique id as modelID
 }
@@ -49,12 +52,12 @@ const disconnectClient = function (client) {
 const requestTrainModel = function (client, modelType, trainData) {
     // client uses algoServer to request a train by a given trainData.
     // NEED TO ADD CODE TO USE TRAIN FUNCTION
-    client.write("hello algoServer, I'm Gilad"); // a way to write algoServer using socket
+    // client.write("hello algoServer, I'm Gilad"); // a way to write algoServer using socket
 
     // NEED TO GET TRUE IF learnNormal WORKED. PUT IT IN result
-    client.on("data", function (data) {
-        console.log("received: " + data);
-    });
+    // client.on("data", function (data) {
+    //     console.log("received: " + data);
+    // });
 
     let result = true; // RESULT FROM TRAIN FUNCTION SHOULD BE 1 (TRUE) OR 0 (FALSE)
     // when request ended, return status
@@ -169,7 +172,7 @@ router.route("/")
                     if (!err) {
                         // ends modelID's client
                         let client = clients.get(modelID);
-                        disconnectClient(client);
+                        // disconnectClient(client);
 
                         // delete modelID' entity from clients
                         clients.delete(modelID);
