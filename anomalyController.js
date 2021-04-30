@@ -57,6 +57,7 @@ router.route("/")
         //let client = clients.get(modelId);      // get client from the clients map. use later in the code to connect to the algo server !
         let predictData = req.body.predict_data;        // obtain clients data from request
         let model;
+        //extract model from the database
         collectionModel.findOne({model_id : modelId} , (error, foundModel) => {
             if (foundModel) {
                 model = foundModel;
