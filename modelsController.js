@@ -13,7 +13,7 @@ router.use(bodyParser.urlencoded({extended: false}));
 router.route("/")
     // GET "/api/models"
     .get(function (req, res) {
-        modelsModel.find().then(model => {
+        modelsModel.find().then(model => {      // send all models stored in the database
             res.send(JSON.stringify(model));
         })
     });
