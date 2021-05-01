@@ -66,7 +66,7 @@ router.route("/")
         if (!specifiedCorrectFeatures) {        // verify that the request contains the feature   s that were trained when the model was uploaded
             res.sendStatus(ERROR_400);
         }
-        if (ready)      // if model was trained and data from the algorithm is ready to be used.
+        if (ready)      // if model was trained and the data from the algorithm is ready to be used.
         {
             //......................................................................
             // need to receive a string/array of time steps back from the algoServer
@@ -81,7 +81,7 @@ router.route("/")
         // model is still pending -> error
         else{
             // need to check how to use redirect
-            res.redirect("/api/model?model_id=${modelId}");
+            res.redirect("GET/api/model?model_id={modelId}");
         }
     });
 
