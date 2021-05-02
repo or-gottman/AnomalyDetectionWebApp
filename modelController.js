@@ -4,13 +4,14 @@ const net = require("net");
 const converter = require("hex2dec");
 const dateFormat = require("dateformat");
 const rateLimit = require("express-rate-limit");
-const modelsCollection = require('./modelsModel')
+const modelsCollection = require("./modelsModel");
+const csvConverter = require("./DataConverter");
 
 const router = express.Router(); // add this controller as router.
 
-// limits 20 requests in 2000 miliseconds
+// limits 20 requests in 1000 miliseconds
 const apiLimiter = rateLimit({
-  windowMs: 2000, // miliseconds
+  windowMs: 1000, // miliseconds
   max: 20
 });
 
@@ -31,19 +32,18 @@ const createClient = function () {
     // create socket to communicate with algoServer
     let client = new net.Socket();
     let port = 5000;
-    let host = "127.0.0.1";
+    let host = "3.142.220.63";
 
     // add new client to clients-map use "modelID" as key
-    // NEED TO USE IT WHEN THERE IS ACTUAL SERVER
-    // clients.set(modelID, client.connect(port, host));
-
-    clients.set(modelID, client);
+    clients.set(modelID, client.connect(port, host));
 
     return modelID; // return unique id as modelID
 }
 
 // disconnect from algoServer for given client
 const disconnectClient = function (client) {
+    // let algoServer know the client is about to close the connection
+    client.write("6\n");
     client.end();
     console.log("disconnected from algoServer");
 };
@@ -51,17 +51,20 @@ const disconnectClient = function (client) {
 // uses given client and start training it, with trainData.
 const requestTrainModel = function (client, modelType, trainData) {
     // client uses algoServer to request a train by a given trainData.
-    // NEED TO ADD CODE TO USE TRAIN FUNCTION
-    // client.write("hello algoServer, I'm Gilad"); // a way to write algoServer using socket
+    client.write("1\n"); // a way to write algoServer using socket
+    // send algoServer data to train model
+    for (let row in trainData) {
+        console.log(row);
+        client.write(row + "\n"); // write trainData row by row to algoServer
+    }
 
-    // NEED TO GET TRUE IF learnNormal WORKED. PUT IT IN result
-    // client.on("data", function (data) {
-    //     console.log("received: " + data);
-    // });
-
-    let result = true; // RESULT FROM TRAIN FUNCTION SHOULD BE 1 (TRUE) OR 0 (FALSE)
+    let train_result = 0;
+    // get back result of train function
+    client.on("data", function (data) {
+        train_result = data;
+    });
     // when request ended, return status
-    return result;
+    return train_result;
 }
 
 // asked to train a given modelID with trainData, asynchronously.
@@ -114,7 +117,10 @@ router.route("/")
             let modelID = createClient();
 
             // get train_data as JS object
-            let trainData = JSON.parse(req.body.train_data);
+            let trainData = csvConverter.toCsvFormat(req.body.train_data);
+            console.log(trainData);
+            // let trainData = JSON.parse(req.body.train_data);
+
             // extract every property-name from trainData
             let propertyNames = Object.keys(trainData);
             let currentStatus = "pending"; // default value
@@ -172,7 +178,7 @@ router.route("/")
                     if (!err) {
                         // ends modelID's client
                         let client = clients.get(modelID);
-                        // disconnectClient(client);
+                        disconnectClient(client);
 
                         // delete modelID' entity from clients
                         clients.delete(modelID);
