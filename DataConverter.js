@@ -20,7 +20,6 @@ class DataConverter
         for (let i =0; i < length; i++) {
             let tmp = []
             for (let col of colums) {
-                console.log(col)
                 tmp.push(col[i]);
             }
             let l=   rows.push(tmp.toString());
