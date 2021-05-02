@@ -9,7 +9,7 @@ class DataConverter
      * Returns an array with all rows as strings
      * @param data
      */
-    static convert(data) {
+    static toCsvFormat(data) {
         let keys = Object.keys(data);
         let colums = [];
         let rows = [];
