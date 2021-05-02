@@ -3,6 +3,7 @@ const router = express.Router(); // add this controller as router.
 const modelController = require("./modelController");
 const DataBaseUtils = require("./utilsDB");
 const collectionModel = require("./modelsModel")
+const dataConverter = require("json-2-csv");
 const clients = modelController.clients;   // obtain the map of the clients.
 const ERROR_400 = 400;
 
@@ -68,6 +69,15 @@ router.route("/")
         }
         if (ready)      // if model was trained and the data from the algorithm is ready to be used.
         {
+            // conver the DATA to csv format and send to the algo server line after line.
+            dataConverter.json2csv(predictData,(err,csv)=>{
+                if (err) throw err;
+                let dataInList = csv.split("\n");
+                dataInList.forEach((row) => {
+                    // send server the row (from the csv)
+                })
+
+            })
             //......................................................................
             // need to receive a string/array of time steps back from the algoServer
             let timeStepsAnswerFromServer = ""
