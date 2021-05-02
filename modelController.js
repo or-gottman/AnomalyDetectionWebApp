@@ -53,10 +53,9 @@ const requestTrainModel = function (client, modelType, trainData) {
     // client uses algoServer to request a train by a given trainData.
     client.write("1\n"); // a way to write algoServer using socket
     // send algoServer data to train model
-    for (let row in trainData) {
-        console.log(row);
-        client.write(row + "\n"); // write trainData row by row to algoServer
-    }
+    trainData.forEach(function (row) {
+       client.write(row + "\n"); // write trainData row by row to algoServer
+    });
 
     let train_result = 0;
     // get back result of train function
@@ -115,11 +114,10 @@ router.route("/")
         if (modelType === "hybrid" || modelType === "regression") {
             // create client and get modelID
             let modelID = createClient();
+            let trainData = JSON.parse(req.body.train_data);
 
             // get train_data as JS object
-            let trainData = csvConverter.toCsvFormat(req.body.train_data);
-            console.log(trainData);
-            // let trainData = JSON.parse(req.body.train_data);
+            let trainData_row = csvConverter.toCsvFormat(trainData);
 
             // extract every property-name from trainData
             let propertyNames = Object.keys(trainData);
@@ -138,7 +136,7 @@ router.route("/")
             addModel.save()
                 .then(() => {
                     // send a train request to algoServer, asynchronously
-                    let result = train(modelID, modelType, trainData);
+                    let result = train(modelID, modelType, trainData_row);
 
                     modelsCollection.findOne({model_id: modelID}, function (err, foundModel) {
                         if (foundModel) {
