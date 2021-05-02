@@ -12,7 +12,7 @@ class DataConverter
         let keys = Object.keys(data);
         let colums = [];
         let rows = [];
-        let l = rows.push(keys.toString());
+        rows.push(keys.toString());
         for (let key in data) {
             colums.push(data[key])
         }
@@ -22,7 +22,7 @@ class DataConverter
             for (let col of colums) {
                 tmp.push(col[i]);
             }
-            let l=   rows.push(tmp.toString());
+            rows.push(tmp.toString());
         }
         return rows;
 
