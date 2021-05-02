@@ -1,7 +1,6 @@
 
 
 
-
 class DataConverter
 {
     /**
@@ -9,28 +8,27 @@ class DataConverter
      * Returns an array with all rows as strings
      * @param data
      */
-    static toCsvFormat(data) {
+    static convert(data) {
         let keys = Object.keys(data);
         let colums = [];
         let rows = [];
-        rows.push(keys.toString());
+        let l = rows.push(keys.toString());
         for (let key in data) {
-
             colums.push(data[key])
         }
-        let length = colums.length;
+        let length = colums[0].length;      // all columns are of same length
         for (let i =0; i < length; i++) {
             let tmp = []
             for (let col of colums) {
+                console.log(col)
                 tmp.push(col[i]);
             }
-            rows.push(tmp.toString());
+            let l=   rows.push(tmp.toString());
         }
         return rows;
 
     }
 }
-
 
 
 module.exports = DataConverter;
