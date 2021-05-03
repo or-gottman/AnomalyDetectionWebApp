@@ -2,10 +2,12 @@ const express = require("express");
 const router = express.Router(); // add this controller as router.
 const modelController = require("./modelController");
 const DataBaseUtils = require("./utilsDB");
-const collectionModel = require("./modelsModel")
-const dataConverter = require("json-2-csv");
+const collectionModel = require("./modelsModel");
+const csvConverter = require("./DataConverter");
 const clients = modelController.clients;   // obtain the map of the clients.
 const ERROR_400 = 400;
+
+
 
 class FeaturesWrapper {
     constructor(features) {
@@ -19,31 +21,29 @@ class FeaturesWrapper {
     }
 }
 
-class Span
-{
-    constructor(start, end) {
-        this.start = start;
-        this.end = end;
-    }
-}
-
 /**
- * function returns a map such that: <feature,spans>
- * each feature maps to the spans that were calculated by the algorithm.
- * @param timeSteps
+ *  sends a request to the algo server to detect anomalies and receives the anomalies back.
+ * @param client
+ * @param anomalies
+ * @param callback
  */
-const createAnomalies = function(timeSteps){
-    // ********* need to implement according to the given format *************
-    let map = new Map();
-    return map;
-};
+const sendAnomaliesGetResults = function(client, anomalies, callback) {
+    // let algoServer know client is about to send CSV for anomalies
+    client.write("3\n");
 
+    // sending algoServer anomalies row by row
+    anomalies.forEach(function(row){
+        client.write(row + "\n");
+    });
+    client.write("done\n");
 
-class Anomaly {
-    constructor(map, reason) {
-        this.anomalies = map;
-        this.reason = reason;
-    }
+    // ask algoServer for anomalies results
+    client.write("4\n");
+
+    // get back data from algoServer
+    client.on("data", function(data) {
+        callback(data); // get anomalies results. data will ended with "Done."
+    });
 }
 
 // parser a given request, get access to request's fields.
@@ -55,10 +55,9 @@ router.route("/")
     // POST "/api/anomaly"
     .post( function (req, res) {
         let modelId = req.query.model_id;       // obtain id from query
-        //let client = clients.get(modelId);      // get client from the clients map. use later in the code to connect to the algo server !
+
         let predictData = req.body.predict_data;        // obtain clients data from request
         let model = DataBaseUtils.find(modelId);        // obtain model from the database
-       // console.log(model);
         let modelStatus = model.status;     // extract the status of the model
         let ready = modelStatus === "ready";        // verify model status
         let requestFeatures = Object.keys(predictData);      // obtain the names of the attributes from the request
@@ -69,24 +68,23 @@ router.route("/")
         }
         if (ready)      // if model was trained and the data from the algorithm is ready to be used.
         {
-            // conver the DATA to csv format and send to the algo server line after line.
-            dataConverter.json2csv(predictData,(err,csv)=>{
-                if (err) throw err;
-                let dataInList = csv.split("\n");
-                dataInList.forEach((row) => {
-                    // send server the row (from the csv)
-                })
-
-            })
-            //......................................................................
-            // need to receive a string/array of time steps back from the algoServer
-            let timeStepsAnswerFromServer = ""
-            //.......................  //  probably need to change !!!!...........................................
-            let timeSteps = timeStepsAnswerFromServer.split("\n");      // need to check with Yahel what is the correct format
-            //....................................................................................................
-            let anomalies = createAnomalies(timeSteps);       // do according to given format
-            let anomaly = new Anomaly(anomalies, "Any");       // create JSON object to return to the client
-            res.send(JSON.stringify(anomaly));
+            let anomalies = {};
+            let client = clients.get(modelId);
+            let results;
+            let convertedAnomalies = csvConverter.toCsvFormat(JSON.parse(predictData));      // convert to csv format (array of rows)
+            sendAnomaliesGetResults(client,convertedAnomalies, function(data){        // sends request to algo server and gets back the spans.
+                results = data;
+            });
+            let resultsArray = results.split('\n');      // each line in the array is of the format: start end (columns) for example: 44 49 A-B
+            resultsArray.forEach((line) => {
+                let linesArray = line.split(' ');        //  need to check if \s is better
+                anomalies[linesArray[2]] = [linesArray[0],linesArray[1]];     // each description of columns for example (A-B) maps to a span = [start,end] of lines in which an anomaly occurred
+            });
+            let anomalyReport = {       // create the return object
+                "anomalies" : anomalies,
+                "reason"    : "Any"     // need to check what to do with reason
+            };
+            res.send(JSON.stringify(anomalyReport));        // send results to the client
         }
         // model is still pending -> error
         else{
@@ -94,7 +92,5 @@ router.route("/")
             res.redirect("GET/api/model?model_id={modelId}");
         }
     });
-
-
 
 module.exports = router; // mapping a router and logic required to map /anomaly
