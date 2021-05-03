@@ -81,8 +81,8 @@ router.route("/")
                 anomalies[linesArray[2]] = [linesArray[0],linesArray[1]];     // each description of columns for example (A-B) maps to a span = [start,end] of lines in which an anomaly occurred
             });
             let anomalyReport = {       // create the return object
-                "anomalies" : anomalies,
-                "reason"    : "Any"     // need to check what to do with reason
+                "anomalies:" : anomalies,
+                "reason:"    : "Any"     // need to check what to do with reason
             };
             res.send(JSON.stringify(anomalyReport));        // send results to the client
         }
