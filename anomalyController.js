@@ -57,18 +57,20 @@ router.route("/")
         let modelId = req.query.model_id;       // obtain id from query
 
         let predictData = req.body.predict_data;        // obtain clients data from request
+        console.log(predictData)
         let model = DataBaseUtils.find(modelId);        // obtain model from the database
+        console.log(model);
         let modelStatus = model.status;     // extract the status of the model
         let ready = modelStatus === "ready";        // verify model status
         let requestFeatures = Object.keys(predictData);      // obtain the names of the attributes from the request
         let trainedFeatures = new FeaturesWrapper(model.features);      // parse the trained features to an array and wrap it in a wrapper class
         let specifiedCorrectFeatures = trainedFeatures.isSubsetOf(requestFeatures);
-        if (!specifiedCorrectFeatures) {        // verify that the request contains the feature   s that were trained when the model was uploaded
+        if (!specifiedCorrectFeatures) {        // verify that the request contains the features that were trained when the model was uploaded
             res.sendStatus(ERROR_400);
         }
         if (ready)      // if model was trained and the data from the algorithm is ready to be used.
         {
-            let anomalies = {};
+            let anomaliesDict = {};
             let client = clients.get(modelId);
             let results;
             let convertedAnomalies = csvConverter.toCsvFormat(JSON.parse(predictData));      // convert to csv format (array of rows)
@@ -78,11 +80,11 @@ router.route("/")
             let resultsArray = results.split('\n');      // each line in the array is of the format: start end (columns) for example: 44 49 A-B
             resultsArray.forEach((line) => {
                 let linesArray = line.split(' ');        //  need to check if \s is better
-                anomalies[linesArray[2]] = [linesArray[0],linesArray[1]];     // each description of columns for example (A-B) maps to a span = [start,end] of lines in which an anomaly occurred
+                anomaliesDict[linesArray[2]] = [linesArray[0],linesArray[1]];     // each description of columns for example (A-B) maps to a span = [start,end] of lines in which an anomaly occurred
             });
             let anomalyReport = {       // create the return object
-                "anomalies:" : anomalies,
-                "reason:"    : "Any"     // need to check what to do with reason
+                anomalies : anomaliesDict,
+                reason : "Any"     // need to check what to do with reason
             };
             res.send(JSON.stringify(anomalyReport));        // send results to the client
         }
