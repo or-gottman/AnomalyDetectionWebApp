@@ -4,8 +4,8 @@ const net = require("net");
 const converter = require("hex2dec");
 const dateFormat = require("dateformat");
 const rateLimit = require("express-rate-limit");
-const modelsCollection = require("./modelsModel");
 const csvConverter = require("./DataConverter");
+const DataBaseUtils = require("./utilsDB");
 
 const router = express.Router(); // add this controller as router.
 
@@ -49,34 +49,37 @@ const disconnectClient = function (client) {
 };
 
 // uses given client and start training it, with trainData.
-const requestTrainModel = function (client, modelType, trainData) {
+const requestTrainModel = function (client, modelType, trainData, callback) {
     // client uses algoServer to request a train by a given trainData.
-    client.write("1\n"); // a way to write algoServer using socket
+    client.write("1\n");
     // send algoServer data to train model
     trainData.forEach(function (row) {
        client.write(row + "\n"); // write trainData row by row to algoServer
     });
+    client.write("done\n"); // let algoServer know client finished sending train-data
 
-    let train_result = 0;
     // get back result of train function
     client.on("data", function (data) {
-        train_result = data;
+        callback(data); // if train succeed, sets train_result to 1
     });
-    // when request ended, return status
-    return train_result;
 }
 
 // asked to train a given modelID with trainData, asynchronously.
 const train = async function (modelID, modelType, trainData) {
     // get client object from map, based on given modelID
     let client = clients.get(modelID);
-    let answer = await requestTrainModel(client, modelType, trainData); // train model asynchronously
-    if (answer) {
-        // update status of request with "answer" to models collection in modelID document
-        modelsCollection.updateOne({model_id: modelID}, {$set: {status: "ready"}}, function (err) {
-            // WHAT SHOULD IT DO IN CASE IT CANT UPDATE STATUS IN DB?!
-        });
-    }
+
+    // train model asynchronously
+    await requestTrainModel(client, modelType, trainData, function (result) {
+        if (result) {
+            // update status of modelID document with "ready"
+            DataBaseUtils.update_status(modelID, "ready", function (err) {
+                if (err) {
+                    // WHAT SHOULD IT DO IN CASE IT CANT UPDATE STATUS IN DB?!
+                }
+            });
+        }
+    });
     // WHAT SHOULD IT DO IN CASE TRAIN FUNCTION (IN algoServer) SENT BACK ERROR?!
 }
 
@@ -88,7 +91,7 @@ router.route("/")
         let modelID = req.query.model_id;
 
         // check if there is any record with modelID as "model_id"
-        modelsCollection.findOne({model_id: modelID}, function (err, foundModel) {
+        DataBaseUtils.find_withCallback(modelID, function (err, foundModel) {
             if (foundModel) {
                 // generate MODEL object
                 let model = {
@@ -116,32 +119,20 @@ router.route("/")
             let modelID = createClient();
             let trainData = JSON.parse(req.body.train_data);
 
-            // get train_data as JS object
-            let trainData_row = csvConverter.toCsvFormat(trainData);
-
             // extract every property-name from trainData
             let propertyNames = Object.keys(trainData);
             let currentStatus = "pending"; // default value
 
-            // create new model document for models collection, with "pending" as status
-            let addModel = new modelsCollection({
-                model_id: modelID,
-                model_type: modelType,
-                date: uploadTime,
-                features: propertyNames,
-                status: currentStatus,
-            });
-
-            // insert "addModel" to models collection
-            addModel.save()
-                .then(() => {
+            // insert new model document with request data ("pending" as status)
+            DataBaseUtils.insert(modelID, modelType, uploadTime, propertyNames, currentStatus, function (err) {
+                if (!err) {
                     // send a train request to algoServer, asynchronously
-                    let result = train(modelID, modelType, trainData_row);
+                    let result = train(modelID, modelType, csvConverter.toCsvFormat(trainData));
 
-                    modelsCollection.findOne({model_id: modelID}, function (err, foundModel) {
-                        if (foundModel) {
+                    // get status of train
+                    DataBaseUtils.find_withCallback(modelID, function (err, foundModel) {
+                        if (foundModel)
                             currentStatus = foundModel.status;
-                        }
                     });
 
                     // generate MODEL object
@@ -153,11 +144,11 @@ router.route("/")
 
                     // return model as JSON to the client
                     res.send(JSON.stringify(model));
-                })
-                .catch(() => {
+                } else {
                     // couldn't store required data in DB
-                    res.sendStatus(507);
-                })
+                    res.sendStatus(507)
+                }
+            });
         } else {
             // model-type requested is not supported
             res.sendStatus(400);
@@ -169,21 +160,17 @@ router.route("/")
         let modelID = req.query.model_id;
 
         // check if there is any document with modelID as "model_id"
-        modelsCollection.findOne({model_id: modelID}, function (err, foundModel) {
-            if (foundModel) {
-                // delete it from models collection
-                modelsCollection.deleteOne({model_id: modelID}, function (err) {
-                    if (!err) {
-                        // ends modelID's client
-                        let client = clients.get(modelID);
-                        disconnectClient(client);
+        DataBaseUtils.delete(modelID, function (err, deleteModel) {
+            if (deleteModel) {
+                // ends modelID's client
+                let client = clients.get(modelID);
+                disconnectClient(client);
 
-                        // delete modelID' entity from clients
-                        clients.delete(modelID);
+                // delete modelID' entity from clients
+                clients.delete(modelID);
 
-                        // successfully deleted requested model
-                        res.sendStatus(200);
-                    }});
+                // successfully deleted requested model
+                res.sendStatus(200);
             } else {
                 // there is no such modelID
                 res.sendStatus(404);
