@@ -38,7 +38,7 @@ const sendAnomaliesGetResults = function(client, anomalies, callback) {
     client.write("done\n");
 
     // ask algoServer for anomalies results
-    client.write("4\n");
+    client.write("6\n");        // changed from 4 to 6 (span command in algo server)
 
     // get back data from algoServer
     client.on("data", function(data) {
