@@ -79,8 +79,8 @@ router.route("/")
             });
             let resultsArray = results.split('\n');      // each line in the array is of the format: start end (columns) for example: 44 49 A-B
             resultsArray.forEach((line) => {
-                let linesArray = line.split(' ');        //  need to check if \s is better
-                anomaliesDict[linesArray[2]] = [linesArray[0],linesArray[1]];     // each description of columns for example (A-B) maps to a span = [start,end] of lines in which an anomaly occurred
+                let lineArray = line.split(' ');        //  need to check if \s is better
+                anomaliesDict[lineArray[2]] = [lineArray[0],lineArray[1]];     // each description of columns for example (A-B) maps to a span = [start,end] of lines in which an anomaly occurred
             });
             let anomalyReport = {       // create the return object
                 anomalies : anomaliesDict,
