@@ -32,7 +32,7 @@ const createClient = function () {
     // create socket to communicate with algoServer
     let client = new net.Socket();
     let port = 5000;
-    let host = "3.142.220.63";
+    let host = "3.16.154.87";
 
     // add new client to clients-map use "modelID" as key
     clients.set(modelID, client.connect(port, host));
