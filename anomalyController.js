@@ -91,7 +91,7 @@ router.route("/")
         // model is still pending -> error
         else{
             // need to check how to use redirect
-            res.redirect("GET/api/model?model_id={modelId}");
+            res.redirect("/api/model?model_id={modelId}");
         }
     });
 
