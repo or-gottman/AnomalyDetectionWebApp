@@ -43,7 +43,7 @@ const createClient = function () {
 // disconnect from algoServer for given client
 const disconnectClient = function (client) {
     // let algoServer know the client is about to close the connection
-    client.write("6\n");
+    client.write("8\n");
     client.end();
     console.log("disconnected from algoServer");
 };
@@ -51,7 +51,13 @@ const disconnectClient = function (client) {
 // uses given client and start training it, with trainData.
 const requestTrainModel = function (client, modelType, trainData, callback) {
     // client uses algoServer to request a train by a given trainData.
-    client.write("1\n");
+    if (modelType === "hybrid"){
+        client.write("1\n");
+    }
+    else { // regression
+        client.write("2\n");
+    }
+
     // send algoServer data to train model
     trainData.forEach(function (row) {
        client.write(row + "\n"); // write trainData row by row to algoServer
