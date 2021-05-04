@@ -28,7 +28,7 @@ const getClient = function (modelID) {
 module.exports.clients = getClient;
 
 // creates a new client (open TCP/IP connection with algoServer). Returns modelID.
-const createClient = function () {
+const createClient = function (callback) {
     // create a 16-number unique id as modelID
     let modelID = converter.hexToDec(nid({hex:1, length: 16})());
 
@@ -40,7 +40,15 @@ const createClient = function () {
     // add new client to clients-map use "modelID" as key
     clients.set(modelID, client.connect(port, host));
 
-    return modelID; // return unique id as modelID
+    clients.get(modelID).on("connect", function (connection) {
+        callback(modelID);
+    });
+
+    clients.get(modelID).on("error", function (error) {
+        console.log("Failure connection with algoServer (IP: " + host + "). Please check it soon.");
+        clients.delete(modelID); // delete record from clients
+        callback(-1);
+    });
 }
 
 // disconnect from algoServer for given client
@@ -89,7 +97,6 @@ const train = async function (modelID, modelType, trainData) {
             });
         }
     });
-    // WHAT SHOULD IT DO IN CASE TRAIN FUNCTION (IN algoServer) SENT BACK ERROR?!
 }
 
 // main route here is: /api/model
@@ -120,48 +127,59 @@ router.route("/")
         // set upload time as current time in the following format: "YYYY-MM-DDTHH:mm:ssZ"
         let uploadTime = dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM:ssp");
 
-        // get model-type
-        let modelType = req.query.model_type;
-        // verify support for requested model-type
-        if (modelType === "hybrid" || modelType === "regression") {
-            // create client and get modelID
-            let modelID = createClient();
-            let trainData = JSON.parse(req.body.train_data);
+        // create client and get modelID (wait for a connection or error)
+        let modelID;
+        createClient(function (ID) {
+            modelID = ID;
+            // get model-type
+            let modelType = req.query.model_type;
+            // verify support for requested model-type
+            if (modelID !== -1 && (modelType === "hybrid" || modelType === "regression")) {
+                let trainData = JSON.parse(req.body.train_data);
 
-            // extract every property-name from trainData
-            let propertyNames = Object.keys(trainData);
-            let currentStatus = "pending"; // default value
+                // extract every property-name from trainData
+                let propertyNames = Object.keys(trainData);
+                let currentStatus = "pending"; // default value
 
-            // insert new model document with request data ("pending" as status)
-            DataBaseUtils.insert(modelID, modelType, uploadTime, propertyNames, currentStatus, function (err) {
-                if (!err) {
-                    // send a train request to algoServer, asynchronously
-                    let result = train(modelID, modelType, csvConverter.toCsvFormat(trainData));
+                // insert new model document with request data ("pending" as status)
+                DataBaseUtils.insert(modelID, modelType, uploadTime, propertyNames, currentStatus, function (err) {
+                    if (!err) {
+                        // send a train request to algoServer, asynchronously
+                        let result = train(modelID, modelType, csvConverter.toCsvFormat(trainData));
 
-                    // get status of train
-                    DataBaseUtils.find_withCallback(modelID, function (err, foundModel) {
-                        if (foundModel)
-                            currentStatus = foundModel.status;
-                    });
+                        // get status of train
+                        DataBaseUtils.find_withCallback(modelID, function (err, foundModel) {
+                            if (foundModel)
+                                currentStatus = foundModel.status;
+                        });
 
-                    // generate MODEL object
-                    let model = {
-                        model_id: modelID,
-                        upload_time: uploadTime,
-                        status: currentStatus
-                    };
+                        // generate MODEL object
+                        let model = {
+                            model_id: modelID,
+                            upload_time: uploadTime,
+                            status: currentStatus
+                        };
 
-                    // return model as JSON to the client
-                    res.send(JSON.stringify(model));
+                        // return model as JSON to the client
+                        res.send(JSON.stringify(model));
+                    } else {
+                        // couldn't store required data in DB
+                        res.sendStatus(507)
+                    }
+                });
+            } else {
+                if (modelID === -1) {
+                    // algoServer is down
+                    res.sendStatus(500);
                 } else {
-                    // couldn't store required data in DB
-                    res.sendStatus(507)
+                    // ends modelID's client and delete it from clients
+                    disconnectClient(clients.get(modelID));
+                    clients.delete(modelID);
+                    // model-type requested is not supported
+                    res.sendStatus(400);
                 }
-            });
-        } else {
-            // model-type requested is not supported
-            res.sendStatus(400);
-        }
+            }
+        });
     })
     // DELETE "/api/model"
     .delete(function (req, res) {
