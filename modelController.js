@@ -22,7 +22,7 @@ router.use(bodyParser.urlencoded({extended: false}));
 // mapping every model to a specific client
 let clients = new Map();
 // export clients
-exports.clients = clients;
+module.exports.clients = clients;
 
 // creates a new client (open TCP/IP connection with algoServer). Returns modelID.
 const createClient = function () {
