@@ -23,7 +23,7 @@ const removeRedundantFeatures= function (predictData,requestFeatures, trainData)
     let updatedDataToPredict = {};
     requestFeatures.forEach((feature) =>
     {
-        if (feature in trainData) {
+        if (trainData.includes(feature)) {
             updatedDataToPredict[feature] = predictData[feature];       // assigns the data from the clients req for this specific feature.
         }
     });
