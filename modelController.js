@@ -21,11 +21,9 @@ router.use(bodyParser.urlencoded({extended: false}));
 
 // mapping every model to a specific client
 let clients = new Map();
-// export clients
-const getClient = function (modelID) {
+function getClient (modelID) {
     return clients.get(modelID);
 }
-module.exports.clients = getClient;
 
 // creates a new client (open TCP/IP connection with algoServer). Returns modelID.
 const createClient = function (callback) {
@@ -35,7 +33,7 @@ const createClient = function (callback) {
     // create socket to communicate with algoServer
     let client = new net.Socket();
     let port = 5000;
-    let host = "3.16.154.87";
+    let host = "18.218.32.111";
 
     // add new client to clients-map use "modelID" as key
     clients.set(modelID, client.connect(port, host));
@@ -206,3 +204,5 @@ router.route("/")
     })
 
 module.exports = router; // mapping a router and logic required to map /model
+// export clients
+module.exports.getClient = getClient;
