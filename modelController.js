@@ -4,10 +4,12 @@ const net = require("net");
 const converter = require("hex2dec");
 const dateFormat = require("dateformat");
 const rateLimit = require("express-rate-limit");
-const csvConverter = require("./DataConverter");
 const DataBaseUtils = require("./utilsDB");
+const cors = require('cors')
 
 const router = express.Router(); // add this controller as router.
+
+router.use(cors()) // Use this after the variable declaration
 
 // limits 20 requests in 1000 miliseconds
 const apiLimiter = rateLimit({
@@ -33,19 +35,27 @@ const createClient = function (callback) {
     // create socket to communicate with algoServer
     let client = new net.Socket();
     let port = 5000;
-    let host = "18.218.32.111";
+    let host = "127.0.0.1";
+
+    let response = false;
 
     // add new client to clients-map use "modelID" as key
     clients.set(modelID, client.connect(port, host));
 
     clients.get(modelID).on("connect", function (connection) {
-        callback(modelID);
+        if (!response) {
+            response = true;
+            callback(modelID);
+        }
     });
 
     clients.get(modelID).on("error", function (error) {
         console.log("Failure connection with algoServer (IP: " + host + "). Please check it soon.");
         clients.delete(modelID); // delete record from clients
-        callback(-1);
+        if (!response) {
+            response = true;
+            callback(-1);
+        }
     });
 }
 
@@ -68,14 +78,12 @@ const requestTrainModel = function (client, modelType, trainData, callback) {
     }
 
     // send algoServer data to train model
-    trainData.forEach(function (row) {
-       client.write(row + "\n"); // write trainData row by row to algoServer
-    });
+    client.write(trainData + "\n");
     client.write("done\n"); // let algoServer know client finished sending train-data
 
     // get back result of train function
     client.on("data", function (data) {
-        callback(data); // if train succeed, sets train_result to 1
+        callback(JSON.parse(data.toString())); // if train succeed, sets train_result to 1
     });
 }
 
@@ -124,7 +132,6 @@ router.route("/")
     .post(apiLimiter, function (req, res) {
         // set upload time as current time in the following format: "YYYY-MM-DDTHH:mm:ssZ"
         let uploadTime = dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM:ssp");
-
         // create client and get modelID (wait for a connection or error)
         let modelID;
         createClient(function (ID) {
@@ -143,7 +150,7 @@ router.route("/")
                 DataBaseUtils.insert(modelID, modelType, uploadTime, propertyNames, currentStatus, function (err) {
                     if (!err) {
                         // send a train request to algoServer, asynchronously
-                        let result = train(modelID, modelType, csvConverter.toCsvFormat(trainData));
+                        let result = train(modelID, modelType, trainData);
 
                         // get status of train
                         DataBaseUtils.find_withCallback(modelID, function (err, foundModel) {
