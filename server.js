@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
 require("./mongo");
+const cors = require('cors');
+
+// Allow all
+app.use(cors());
 
 // app.use(express.static("public"));
 

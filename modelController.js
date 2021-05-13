@@ -5,11 +5,9 @@ const converter = require("hex2dec");
 const dateFormat = require("dateformat");
 const rateLimit = require("express-rate-limit");
 const DataBaseUtils = require("./utilsDB");
-const cors = require('cors')
 
 const router = express.Router(); // add this controller as router.
 
-router.use(cors()) // Use this after the variable declaration
 
 // limits 20 requests in 1000 miliseconds
 const apiLimiter = rateLimit({
