@@ -12,8 +12,8 @@ const router = express.Router(); // add this controller as router.
 
 // limits 20 requests in 1000 miliseconds
 const apiLimiter = rateLimit({
-  windowMs: 1000, // miliseconds
-  max: 20
+    windowMs: 1000, // miliseconds
+    max: 20
 });
 
 // parser a given request, get access to request's fields.
@@ -78,7 +78,7 @@ const requestTrainModel = function (client, modelType, trainData, callback) {
 
     // send algoServer data to train model
     trainData.forEach(function (row) {
-       client.write(row + "\n"); // write trainData row by row to algoServer
+        client.write(row + "\n"); // write trainData row by row to algoServer
     });
     client.write("done\n"); // let algoServer know client finished sending train-data
 

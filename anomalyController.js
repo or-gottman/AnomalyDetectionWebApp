@@ -57,23 +57,19 @@ const sendAnomaliesGetResults = function(modelType,client, anomalies, callback) 
     });
     client.write("done\n");
 
-    // get the spans.
-    // ask algoServer for anomalies results
-    //client.write("6\n");        // changed from 4 to 6 (span command in algo server)
-    // get back data from algoServer
     let x = false;
     client.on("data", function(data) {
         if (data.toString() === "true"){
-
             client.write("4\n");
             x = true;
+            console.log(x)
             // get anomalies results. data will ended with "Done."
         }
         else if (x){
+            console.log("in else if")
             data = data.toString();
             callback(data);
         }
-
     });
 }
 
@@ -116,16 +112,15 @@ router.route("/")
                 }
                 if (ready)      // if model was trained and the data from the algorithm is ready to be used.
                 {
-
+                    console.log("in ready")
                    // let client = clients(modelId);  // get client from client map
                     let results;
                     let relevantData = removeRedundantFeatures(predictData,requestFeatures, trainedFeatures.features);
                     let convertedAnomalies = csvConverter.toCsvFormat(relevantData); // doesn't contain the redundant features, parses to csv format
-
                     sendAnomaliesGetResults(modelType,client,convertedAnomalies, function(data){        // sends request to algo server and gets back the spans.
+
                         let anomaliesDict = {};
-                        // No anomalies were found.
-                        if (data === '') {
+                        if (data === '') {      // No anomalies were found.
                             let anomalyReport = {       // create the return object
                                 anomalies : anomaliesDict,
                                 reason : {
@@ -133,6 +128,7 @@ router.route("/")
                             };
                             res.send(JSON.stringify(anomalyReport));
                         }
+
                         let y = data.split('\n');      // each line in the array is of the format: start end (columns) for example: 44 49 A-B
                         let resultsArray = [];
                         for (let i =0 ;i<y.length-1; i++) {
@@ -176,44 +172,6 @@ router.route("/")
             }
 
         });
-
-        // do everything in the callback
-        /*
-        let modelStatus = model.status;     // extract the status of the model
-        let ready = modelStatus === "ready";        // verify model status
-        let requestFeatures = Object.keys(predictData);      // obtain the names of the attributes from the request
-        let trainedFeatures = new FeaturesWrapper(model.features);      // parse the trained features to an array and wrap it in a wrapper class
-        let specifiedCorrectFeatures = trainedFeatures.isSubsetOf(requestFeatures);
-        if (!specifiedCorrectFeatures) {        // verify that the request contains the features that were trained when the model was uploaded
-            res.sendStatus(ERROR_400);
-        }
-        if (ready)      // if model was trained and the data from the algorithm is ready to be used.
-        {
-            let anomaliesDict = {};
-            let client = clients(modelID);  // get client from client map
-            let results;
-            let convertedAnomalies = csvConverter.toCsvFormat(JSON.parse(predictData));      // convert to csv format (array of rows)
-            sendAnomaliesGetResults(client,convertedAnomalies, function(data){        // sends request to algo server and gets back the spans.
-                results = data;
-            });
-            let resultsArray = results.split('\n');      // each line in the array is of the format: start end (columns) for example: 44 49 A-B
-            resultsArray.forEach((line) => {
-                let lineArray = line.split(' ');        //  need to check if \s is better
-                anomaliesDict[lineArray[2]] = [lineArray[0],lineArray[1]];     // each description of columns for example (A-B) maps to a span = [start,end] of lines in which an anomaly occurred
-            });
-            let anomalyReport = {       // create the return object
-                anomalies : anomaliesDict,
-                reason : "Any"     // need to check what to do with reason
-            };
-            res.send(JSON.stringify(anomalyReport));        // send results to the client
-        }
-        // model is still pending -> error
-        else{
-            // need to check how to use redirect
-            res.redirect("/api/model?model_id={modelId}");
-        }
-
-         */
     });
 
 module.exports = router; // mapping a router and logic required to map /anomaly
