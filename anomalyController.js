@@ -62,11 +62,9 @@ const sendAnomaliesGetResults = function(modelType,client, anomalies, callback) 
         if (data.toString() === "true"){
             client.write("4\n");
             x = true;
-            console.log(x)
             // get anomalies results. data will ended with "Done."
         }
         else if (x){
-            console.log("in else if")
             data = data.toString();
             callback(data);
         }
@@ -112,7 +110,6 @@ router.route("/")
                 }
                 if (ready)      // if model was trained and the data from the algorithm is ready to be used.
                 {
-                    console.log("in ready")
                    // let client = clients(modelId);  // get client from client map
                     let results;
                     let relevantData = removeRedundantFeatures(predictData,requestFeatures, trainedFeatures.features);
