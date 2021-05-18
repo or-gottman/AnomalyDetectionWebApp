@@ -30,21 +30,24 @@ class DataBaseUtils {
     // update status of document based on given modelID
     static update_status(modelID, newStatus, callback) {
         collectionModel.updateOne({model_id: modelID}, {$set: {status: newStatus}}, function (err) {
-            callback(err);
+             if (callback !== undefined)
+                callback(err);
         });
     }
 
     // delete the given modelID document from database. return error and deleted model with callback function.
     static delete(modelID, callback) {
         collectionModel.findOneAndDelete({model_id: modelID}, function (err, deleteModel) {
-            callback(err, deleteModel);
+             if (callback !== undefined)
+                callback(err, deleteModel);
         });
     }
 
     // find model matching the given modelID and return this model with a callback function (and an error if occurred)
     static find_withCallback(modelID, callback) {
         collectionModel.findOne({model_id: modelID}, function(err, foundModel) {
-            callback(err, foundModel);
+            if (callback !== undefined)
+                callback(err, foundModel);
         });
     }
 
