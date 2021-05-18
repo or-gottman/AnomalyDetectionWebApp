@@ -77,12 +77,14 @@ const requestTrainModel = function (client, modelType, trainData, callback) {
     }
 
     // send algoServer data to train model
-    client.write(trainData + "\n");
+    trainData.forEach(function (row) {
+       client.write(row + "\n"); // write trainData row by row to algoServer
+    });
     client.write("done\n"); // let algoServer know client finished sending train-data
 
     // get back result of train function
     client.on("data", function (data) {
-        callback(JSON.parse(data.toString())); // if train succeed, sets train_result to 1
+        callback(data); // if train succeed, sets train_result to 1
     });
 }
 
