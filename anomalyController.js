@@ -65,7 +65,7 @@ const sendAnomaliesGetResults = function(modelType,client, anomalies, callback) 
             // get anomalies results. data will ended with "Done."
         }
         else if (x){
-            data = data.toString();
+            data = data.toString();     // handle data from algo server
             callback(data);
         }
     });
