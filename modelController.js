@@ -5,6 +5,7 @@ const converter = require("hex2dec");
 const dateFormat = require("dateformat");
 const rateLimit = require("express-rate-limit");
 const DataBaseUtils = require("./utilsDB");
+const csvConverter = require("./DataConverter");
 
 const router = express.Router(); // add this controller as router.
 
@@ -107,27 +108,35 @@ const train = async function (modelID, modelType, trainData) {
 router.route("/")
     // GET "/api/model"
     .get(function (req, res) {
-        // get model-id
-        let modelID = req.query.model_id;
+        try {
+            // get model-id
+            let modelID = req.query.model_id;
 
-        // check if there is any record with modelID as "model_id"
-        DataBaseUtils.find_withCallback(modelID, function (err, foundModel) {
-            if (foundModel) {
-                // generate MODEL object
-                let model = {
-                    model_id: modelID,
-                    upload_time: foundModel.date,
-                    status: foundModel.status
-                };
-                // return model as JSON to the client
-                res.send(JSON.stringify(model));
-            } else {
-                // there is no such modelID
-                res.sendStatus(404);
-            }});
+            // check if there is any record with modelID as "model_id"
+            DataBaseUtils.find_withCallback(modelID, function (err, foundModel) {
+                if (foundModel) {
+                    // generate MODEL object
+                    let model = {
+                        model_id: modelID,
+                        upload_time: foundModel.date,
+                        status: foundModel.status
+                    };
+                    // return model as JSON to the client
+                    res.send(JSON.stringify(model));
+                } else {
+                    // there is no such modelID
+                    res.sendStatus(404);
+                }
+            });
+        } catch (err) {
+            // bad request
+            res.sendStatus(400);
+        }
     })
     // POST "/api/model"
     .post(apiLimiter, function (req, res) {
+        let isClientOpen = false; // in case error occurred, it flag that there is a client tcp that need to end
+        let isInserted = false; // in case error occurred, it flag that there are data needed to remove from DB
         // set upload time as current time in the following format: "YYYY-MM-DDTHH:mm:ssZ"
         let uploadTime = dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM:ssp");
         // create client and get modelID (wait for a connection or error)
@@ -136,76 +145,100 @@ router.route("/")
             modelID = ID;
             // get model-type
             let modelType = req.query.model_type;
-            // verify support for requested model-type
-            if (modelID !== -1 && (modelType === "hybrid" || modelType === "regression")) {
-                let trainData = JSON.parse(req.body.train_data);
+            try {
+                isClientOpen = true;
+                // verify support for requested model-type
+                if (modelID !== -1 && (modelType === "hybrid" || modelType === "regression")) {
+                    let trainData = JSON.parse(req.body.train_data);
 
-                // extract every property-name from trainData
-                let propertyNames = Object.keys(trainData);
-                let currentStatus = "pending"; // default value
+                    // extract every property-name from trainData
+                    let propertyNames = Object.keys(trainData);
+                    let currentStatus = "pending"; // default value
 
-                // insert new model document with request data ("pending" as status)
-                DataBaseUtils.insert(modelID, modelType, uploadTime, propertyNames, currentStatus, function (err) {
-                    if (!err) {
-                        // send a train request to algoServer, asynchronously
-                        let result = train(modelID, modelType, trainData);
+                    // insert new model document with request data ("pending" as status)
+                    DataBaseUtils.insert(modelID, modelType, uploadTime, propertyNames, currentStatus, function (err) {
+                        if (!err) {
+                            isInserted = true;
+                            // send a train request to algoServer, asynchronously
+                            let result = train(modelID, modelType, csvConverter.toCsvFormat(trainData));
+                            // get status of train
+                            DataBaseUtils.find_withCallback(modelID, function (err, foundModel) {
+                                if (foundModel)
+                                    currentStatus = foundModel.status;
+                            });
 
-                        // get status of train
-                        DataBaseUtils.find_withCallback(modelID, function (err, foundModel) {
-                            if (foundModel)
-                                currentStatus = foundModel.status;
-                        });
+                            // generate MODEL object
+                            let model = {
+                                model_id: modelID,
+                                upload_time: uploadTime,
+                                status: currentStatus
+                            };
 
-                        // generate MODEL object
-                        let model = {
-                            model_id: modelID,
-                            upload_time: uploadTime,
-                            status: currentStatus
-                        };
-
-                        // return model as JSON to the client
-                        res.send(JSON.stringify(model));
-                    } else {
-                        // couldn't store required data in DB
-                        res.sendStatus(507)
-                    }
-                });
-            } else {
-                if (modelID === -1) {
-                    // algoServer is down
-                    res.sendStatus(500);
+                            // return model as JSON to the client
+                            res.send(JSON.stringify(model));
+                        } else {
+                            // couldn't store required data in DB
+                            res.sendStatus(507)
+                        }
+                    });
                 } else {
+                    if (modelID === -1) {
+                        // algoServer is down
+                        res.sendStatus(500);
+                    } else {
+                        // ends modelID's client and delete it from clients
+                        disconnectClient(clients.get(modelID));
+                        clients.delete(modelID);
+                        // model-type requested is not supported
+                        res.sendStatus(400);
+                    }
+                }
+            } catch (err) {
+                if (isClientOpen && modelID !== -1) {
                     // ends modelID's client and delete it from clients
                     disconnectClient(clients.get(modelID));
                     clients.delete(modelID);
-                    // model-type requested is not supported
-                    res.sendStatus(400);
                 }
+                if (isInserted) {
+                    // delete data about this model from DB
+                    DataBaseUtils.delete(modelID);
+                }
+                // bad request
+                res.sendStatus(400);
             }
         });
     })
     // DELETE "/api/model"
     .delete(function (req, res) {
-        // get model-id
-        let modelID = req.query.model_id;
+        try {
+            // get model-id
+            let modelID = req.query.model_id;
+            // check if there is any document with modelID as "model_id"
+            DataBaseUtils.delete(modelID, function (err, deleteModel) {
+                if (deleteModel) {
+                    // ends modelID's client
+                    let client = clients.get(modelID);
+                    if (client !== undefined) {
+                        disconnectClient(client);
 
-        // check if there is any document with modelID as "model_id"
-        DataBaseUtils.delete(modelID, function (err, deleteModel) {
-            if (deleteModel) {
-                // ends modelID's client
-                let client = clients.get(modelID);
-                disconnectClient(client);
+                        // delete modelID' entity from clients
+                        clients.delete(modelID);
 
-                // delete modelID' entity from clients
-                clients.delete(modelID);
-
-                // successfully deleted requested model
-                res.sendStatus(200);
-            } else {
-                // there is no such modelID
-                res.sendStatus(404);
-            }
-        });
+                        // successfully deleted requested model
+                        res.sendStatus(200);
+                    } else {
+                        // bad request
+                        res.sendStatus(400);
+                    }
+                } else {
+                    // there is no such modelID
+                    res.sendStatus(404);
+                }
+            });
+        } catch (err) {
+            // bad request
+            res.sendStatus(400);
+        }
     })
 
 module.exports = router; // mapping a router and logic required to map /model
