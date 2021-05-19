@@ -17,6 +17,7 @@
       </ul>
     </li>
     <li><a href="#Features-and-functionality">Features and functionality</a></li>
+    <li><a href="#API">The API</a></li>
     <li><a href="#UML">UML</a></li>
     <li><a href="#Video">User stories video</a></li>
   </ol>
@@ -70,8 +71,8 @@ This is an example of how to list things you need to use the software and how to
 
 
 
-<!-- Features and functionality including examples -->
-## Features-and-functionality
+<!-- Features-and-functionality -->
+## Features and functionality
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
@@ -86,6 +87,16 @@ is passed to the client side to be presented to the user. Moreover, the informat
 _For more examples, please refer to the [Documentation](https://example.com)_
 
 ADD PICTURES AND EXAMPLES HERE!!
+
+<!-- API -->
+## The API
+
+* POST api/model  - 
+* GET api/model
+* DELETE api/model
+* GET api/models
+* POST api/anomaly
+
 
 <!-- UML -->
 ## UML
