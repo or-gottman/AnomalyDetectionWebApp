@@ -1,4 +1,4 @@
-**Anomaly detection web application**
+###### **Anomaly detection web application**
 
 About the app: 
 This web application project provides a friendly to use interface in which a user can upload a file he wishes
@@ -8,6 +8,7 @@ informative graphs and by spans that specify in which lines the anomalies occurr
 The entire project is written in JavaScript and is divided into 2 main sections:
 1. The client side - with the use of react. 
 2. A RESTful API handling the logic by interacting with a server that detects anomalies. 
+
 The features found in the app: 
 The user first needs to upload a csv file to be trained and also specify the type of algorithm
 (hybrid/regression) that should be used. After uploading the file a notice appears specifying that
