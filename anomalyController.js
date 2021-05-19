@@ -51,12 +51,11 @@ class FeaturesWrapper {
  * @param anomalies
  * @param callback
  */
-const sendAnomaliesGetResults = function(modelType,client, anomalies, callback) {
+const sendAnomaliesGetResults = function(client, anomalies, callback) {
     anomalies.forEach(function(row){
         client.write(row + "\n");
     });
     client.write("done\n");
-
     let x = false;
     client.on("data", function(data) {
         if (data.toString() === "true"){
@@ -65,8 +64,13 @@ const sendAnomaliesGetResults = function(modelType,client, anomalies, callback) 
             // get anomalies results. data will ended with "Done."
         }
         else if (x){
-            data = data.toString();     // handle data from algo server
-            callback(data);
+            if (data.toString() ==="noSpan" ){
+                callback("");
+            }
+            else {
+                data = data.toString();     // handle data from algo server
+                callback(data);
+            }
         }
     });
 }
@@ -110,12 +114,12 @@ router.route("/")
                 }
                 if (ready)      // if model was trained and the data from the algorithm is ready to be used.
                 {
+
                    // let client = clients(modelId);  // get client from client map
                     let results;
                     let relevantData = removeRedundantFeatures(predictData,requestFeatures, trainedFeatures.features);
                     let convertedAnomalies = csvConverter.toCsvFormat(relevantData); // doesn't contain the redundant features, parses to csv format
-                    sendAnomaliesGetResults(modelType,client,convertedAnomalies, function(data){        // sends request to algo server and gets back the spans.
-
+                    sendAnomaliesGetResults(client,convertedAnomalies, function(data){        // sends request to algo server and gets back the spans.
                         let anomaliesDict = {};
                         if (data === '') {      // No anomalies were found.
                             let anomalyReport = {       // create the return object
