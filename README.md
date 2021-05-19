@@ -1,4 +1,4 @@
-######**Anomaly detection web application**######
+######**Anomaly detection web application**
 
 About the app:
 
