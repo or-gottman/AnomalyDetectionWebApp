@@ -16,7 +16,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li><a href="#Features-and-functionality">Features and functionality</a></li>
     <li><a href="#UML">UML</a></li>
     <li><a href="#Video">User stories video</a></li>
   </ol>
@@ -71,7 +71,7 @@ This is an example of how to list things you need to use the software and how to
 
 
 <!-- USAGE EXAMPLES -->
-## Usage
+## Features-and-functionality
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
@@ -81,9 +81,11 @@ is also specified. The user can then upload yet another file containing possible
 to the algorithm server for anomaly detection. When the detection is done the algorithm server sends back a message that contains a list of spans for each 2 correlated features.
 The spans are in the format of [start,end] where start is the first line and end is the line after the last line in which the anomalies were found. This list of lines
 is passed to the client side to be presented to the user. Moreover, the information concerning the anomalies is presented graphically in the website....OR CONTINUE FROM HERE!!!!
+
+
 _For more examples, please refer to the [Documentation](https://example.com)_
 
-
+ADD PICTURES AND EXAMPLES HERE!!
 
 <!-- UML -->
 ## UML
