@@ -17,9 +17,9 @@
       </ul>
     </li>
     <li><a href="#Features-and-functionality">Features and functionality</a></li>
-    <li><a href="#API">The API</a></li>
+    <li><a href="#The-API">The API</a></li>
     <li><a href="#UML">UML</a></li>
-    <li><a href="#VIDEO">User stories video</a></li>
+    <li><a href="#VIDEO">User Stories Video</a></li>
   </ol>
 </details>
 
@@ -88,7 +88,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ADD PICTURES AND EXAMPLES HERE!!
 
-<!-- API -->
+<!-- The-API -->
 ## The API
 
 * POST api/model  - 
@@ -105,7 +105,7 @@ add UML here!!
 
 
 <!-- VIDEO -->
-## User stories video
+## User Stories Video
 
 add here the video!!!
 
