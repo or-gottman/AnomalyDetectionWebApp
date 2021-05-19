@@ -95,7 +95,7 @@ ADD PICTURES AND EXAMPLES HERE!!
 * GET api/model   - This path expects a query parameter containing the unique model ID. It sends back the trained model saved in the database.  
 * DELETE api/model  - This path expects a query parameter containing the unique model ID. It deletes the model from the database.
 * GET api/models  - This path sends all the models that were trained and saved in the database. 
-* POST api/anomaly  - This path expects a query parameter containing the unique model ID and the data in the body. The data given in the body is sent to the algorithm server for anomaly detection. It sends back the spans calculated by the algorithm.
+* POST api/anomaly   - This path expects a query parameter containing the unique model ID and the data in the body. The data given in the body is sent to the algorithm server for anomaly detection. It sends back the spans calculated by the algorithm.
 
 
 <!-- UML -->
