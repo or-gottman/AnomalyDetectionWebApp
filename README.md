@@ -75,6 +75,12 @@ This is an example of how to list things you need to use the software and how to
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
+Firstly, the user uploads a csv file to be trained and also specifies which type of algorithm (hybrid/regression) needs to be used by the 
+algorithm server. After the train file is uploaded the user is presented with a notice that a new model has been created, and the time of creation
+is also specified. The user can then upload yet another file containing possible anomalies. The data is processed by the API and passed
+to the algorithm server for anomaly detection. When the detection is done the algorithm server sends back a message that contains a list of spans for each 2 correlated features.
+The spans are in the format of [start,end] where start is the first line and end is the line after the last line in which the anomalies were found. This list of lines
+is passed to the client side to be presented to the user. Moreover, the information concerning the anomalies is presented graphically in the website....OR CONTINUE FROM HERE!!!!
 _For more examples, please refer to the [Documentation](https://example.com)_
 
 
