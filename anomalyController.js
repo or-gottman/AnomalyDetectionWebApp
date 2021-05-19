@@ -52,24 +52,23 @@ class FeaturesWrapper {
  * @param callback
  */
 const sendAnomaliesGetResults = function(client, anomalies, callback) {
-    anomalies.forEach(function(row){
+    anomalies.forEach(function(row){        // send each line to the algo server
         client.write(row + "\n");
     });
-    client.write("done\n");
-    let x = false;
-    client.on("data", function(data) {
-        if (data.toString() === "true"){
-            client.write("4\n");
-            x = true;
-            // get anomalies results. data will ended with "Done."
+    client.write("done\n");     // declare the end for the algo server
+    let recvTrue = false;
+    client.on("data", function(data) {      // listen to the returned value from the algo server
+        if (data.toString() === "true"){        // after the anomaly check if the algo server processed the request --> return value = true
+            client.write("4\n");        // ask for spans
+            recvTrue = true;
         }
-        else if (x){
-            if (data.toString() ==="noSpan" ){
+        else if (recvTrue){
+            if (data.toString() ==="noSpan" ){      // handle the case that the algo server was given non correlative columns
                 callback("");
             }
-            else {
+            else {      // standard case
                 data = data.toString();     // handle data from algo server
-                callback(data);
+                callback(data);     // initiate the callback.
             }
         }
     });
@@ -108,8 +107,9 @@ router.route("/")
                 let requestFeatures = Object.keys(predictData);      // obtain the names of the attributes from the request
                 let trainedFeatures = new FeaturesWrapper(model.features);      // parse the trained features to an array and wrap it in a wrapper class
                 let specifiedCorrectFeatures = trainedFeatures.isSubsetOf(requestFeatures);
-
-                if (!specifiedCorrectFeatures) {        // verify that the request contains the features that were trained when the model was uploaded
+                let requestSize = requestFeatures.length;       // in order to verify that the size of the feature isn't 1
+                let trainedSize = model.features.length;        // also the trained features mustn't be of size 1
+                if ((!specifiedCorrectFeatures) || requestSize ===1 || trainedSize===1) {        // verify that the request contains the features that were trained when the model was uploaded
                     res.sendStatus(ERROR_400);
                 }
                 if (ready)      // if model was trained and the data from the algorithm is ready to be used.
@@ -121,6 +121,7 @@ router.route("/")
                     let convertedAnomalies = csvConverter.toCsvFormat(relevantData); // doesn't contain the redundant features, parses to csv format
                     sendAnomaliesGetResults(client,convertedAnomalies, function(data){        // sends request to algo server and gets back the spans.
                         let anomaliesDict = {};
+                        // handle no spans case:
                         if (data === '') {      // No anomalies were found.
                             let anomalyReport = {       // create the return object
                                 anomalies : anomaliesDict,
@@ -129,23 +130,22 @@ router.route("/")
                             };
                             res.send(JSON.stringify(anomalyReport));
                         }
-
                         let y = data.split('\n');      // each line in the array is of the format: start end (columns) for example: 44 49 A-B
                         let resultsArray = [];
-                        for (let i =0 ;i<y.length-1; i++) {
+                        for (let i =0 ;i<y.length-1; i++) {     // last element is "" therefore need to ignore it.
                             resultsArray.push(y[i])
                         }
                         resultsArray.forEach((line) => {
-                            let lineArray = line.split(' ');        //  need to check if \s is better
+                            let lineArray = line.split(' ');        // format: x y A-B (where x is start, y is end, and A-B are the correlated features)
                             let first = parseInt(lineArray[0]);
                             let end = parseInt(lineArray[1]);
-                            if (lineArray[2] in anomaliesDict) {
+                            if (lineArray[2] in anomaliesDict) {        // if this entry (of correlated features) is already in the dictionary
                                 let alreadyInArray = anomaliesDict[lineArray[2]].some(arr => JSON.stringify(arr) ===JSON.stringify([first,end]));    // ignore replicates
                                 if (!alreadyInArray) {
                                     anomaliesDict[lineArray[2]].push([first, end]);     // add span to the array of spans
                                 }
                             }
-                            else {
+                            else {      // create new entry
                                 anomaliesDict[lineArray[2]] = [[first, end]];     // each entry (column names for example A-B) in the dictionary maps to an array of spans.
                             }
                         });
@@ -153,23 +153,16 @@ router.route("/")
                             anomalies : anomaliesDict,
                             reason : {}     // need to check what to do with reason
                         };
-
-
                         res.send(JSON.stringify(anomalyReport));
-
-
                     });
                 }
                 // model is still pending -> error
                 else{
-                    // need to check how to use redirect
-                    console.log("in redirect");
                     res.redirect("/api/model?model_id={modelId}");
                 }
             }
             else {
-                //.....................what error to throw ?......
-                throw err;
+                res.sendStatus(500);        // server cannot process this request because no model could be found
             }
 
         });
