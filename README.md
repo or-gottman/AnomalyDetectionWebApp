@@ -1,6 +1,7 @@
-####**Anomaly detection web application**
+**Anomaly detection web application**
 
-##About the app: 
+About the app: 
+
 This web application project provides a friendly to use interface in which a user can upload a file he wishes
 to train, and another csv file with possible anomalies. The uploaded data is processed by an anomaly detection 
 algorithm, and the answers that are sent back from the algorithm are presented to the user in a few
@@ -10,6 +11,7 @@ The entire project is written in JavaScript and is divided into 2 main sections:
 2. A RESTful API handling the logic by interacting with a server that detects anomalies. 
 
 The features found in the app: 
+
 The user first needs to upload a csv file to be trained and also specify the type of algorithm
 (hybrid/regression) that should be used. After uploading the file a notice appears specifying that
 a new model has been created, and also the time of creation is presented. 
