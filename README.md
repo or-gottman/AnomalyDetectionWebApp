@@ -90,7 +90,7 @@ to train, and another csv file with possible anomalies. The uploaded data is pro
 algorithm, and the answers that are sent back from the algorithm are presented to the user in a few
 informative graphs and by spans that specify in which lines the anomalies occurred.
 The entire project is written in JavaScript and is divided into 2 main sections:
-1. The client side - with the use of react.
+1. The client side
 2. A RESTful API handling the logic by interacting with a server that detects anomalies.
 
 
