@@ -19,7 +19,7 @@
     <li><a href="#Features-and-functionality">Features and functionality</a></li>
     <li><a href="#The-API">The API</a></li>
     <li><a href="#UML">UML</a></li>
-    <li><a href="#VIDEO">User Stories Video</a></li>
+    <li><a href="#User-Stories-Video">User Stories Video</a></li>
   </ol>
 </details>
 
@@ -104,7 +104,7 @@ ADD PICTURES AND EXAMPLES HERE!!
 add UML here!!
 
 
-<!-- VIDEO -->
+<!-- User-Stories-Video -->
 ## User Stories Video
 
 add here the video!!!
