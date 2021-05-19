@@ -1,4 +1,4 @@
-######**_Anomaly detection web application_**
+**_Anomaly detection web application_**
 
 ###### About the app:
 
@@ -16,7 +16,7 @@ The user first needs to upload a csv file to be trained and also specify the typ
 (hybrid/regression) that should be used. After uploading the file a notice appears specifying that
 a new model has been created, and also the time of creation is presented. 
 The user can then upload yet another csv file containing possible anomalies. The data is processed and after
-algorithm finishes the detection an answer is presented to the user in the form of spans.
+the algorithm finishes the detection an answer is presented to the user in the form of spans.
 Moreover, the information concerning the anomalies is presented graphically in the website and
 thus the user can learn more of what has led to these anomalies. 
 ###TO BE CONTINUED BY OR - EXPLANATION ABOUT THE DIFFERENT GRAPHS!!!!!
