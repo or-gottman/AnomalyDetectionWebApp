@@ -91,8 +91,8 @@ ADD PICTURES AND EXAMPLES HERE!!
 <!-- The-API -->
 ## The API
 
-* POST api/model  - 
-* GET api/model
+* POST api/model  - This path receives a param with model type and the data in the body. A new model is created that contains a unique ID for this model, the time of creation, the type of algorithm that model was trained with, and the features that were trained.
+* GET api/model   - This path  
 * DELETE api/model
 * GET api/models
 * POST api/anomaly
