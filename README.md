@@ -18,7 +18,7 @@
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#UML">UML</a></li>
-    <li><a href="#Video">app-presentation-video</a></li>
+    <li><a href="#Video">User stories video</a></li>
   </ol>
 </details>
 
