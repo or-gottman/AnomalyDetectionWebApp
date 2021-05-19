@@ -19,7 +19,7 @@
     <li><a href="#Features-and-functionality">Features and functionality</a></li>
     <li><a href="#API">The API</a></li>
     <li><a href="#UML">UML</a></li>
-    <li><a href="#Video">User stories video</a></li>
+    <li><a href="#app-presentation-video">User stories video</a></li>
   </ol>
 </details>
 
