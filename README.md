@@ -91,7 +91,7 @@ ADD PICTURES AND EXAMPLES HERE!!
 <!-- The-API -->
 ## The API
 
-* POST api/model  - This path expects a query parameter containing the model type and the data in the body. The data sent in the body is trained by the algorithm server. After that a new model is created that contains a unique ID for this model, the exact time the model was created, the type of algorithm that model was trained with, and the features that were trained.
+* POST api/model  - This path expects a query parameter containing the model type and the data in the body. The data sent in the body is trained by the algorithm server. After that a new model is created that contains a unique ID for this model, the exact time the model was created, the type of algorithm that the model was trained with, and the features that were trained.
 * GET api/model   - This path expects a query parameter containing the unique model ID. It sends back the trained model saved in the database.  
 * DELETE api/model  - This path expects a query parameter containing the unique model ID. It deletes the model from the database.
 * GET api/models  - This path sends all the models that were trained and saved in the database. 
