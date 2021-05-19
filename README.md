@@ -17,7 +17,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#UML">Roadmap</a></li>
+    <li><a href="#UML">UML</a></li>
   </ol>
 </details>
 
