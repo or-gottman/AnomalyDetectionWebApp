@@ -43,6 +43,7 @@ The entire project is written in JavaScript and is divided into 2 main sections:
 
 * [node.js]()
 * [react]()
+* [Mongo DB]()
 
 
 
