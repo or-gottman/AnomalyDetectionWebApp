@@ -77,6 +77,7 @@ To get a local copy up and running follow these steps.
    git clone https://github.com/giladaube/WebClientAnomaliesDetector
    
    ```
+   Once cloned in order to intiate the website please enter: npm start
 4. Algorithm Server
    ```sh
    git clone https://github.com/y-jacobs/algoServer
