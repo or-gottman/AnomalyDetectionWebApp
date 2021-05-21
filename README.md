@@ -43,7 +43,7 @@ The entire project is written in JavaScript and is divided into 2 main sections:
 
 * [node.js](https://nodejs.org/en/)
 * [react](https://reactjs.org/)
-* [Mongo DB](https://www.mongodb.com/cloud/atlas/lp/try2?utm_source=google&utm_campaign=gs_emea_israel_search_core_brand_atlas_desktop&utm_term=mongodb&utm_medium=cpc_paid_search&utm_ad=e&utm_ad_campaign_id=12212624530&gclid=CjwKCAjwtJ2FBhAuEiwAIKu19ojox_-a4oBlYNILFprQQTicNgEkXgPJ80YcNiwstHFLXsTVvD0sNhoC2n0QAvD_BwE)
+* [Mongo DB](https://www.mongodb.com/)
 
 
 
