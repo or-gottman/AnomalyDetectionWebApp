@@ -40,8 +40,9 @@ The entire project is written in JavaScript and is divided into 2 main sections:
 
 ### Built With
 
-* [node.js]()
-* [react]()
+* [node.js](https://nodejs.org/en/)
+* [react](https://reactjs.org/)
+* [Mongo DB](https://www.mongodb.com/)
 
 
 
