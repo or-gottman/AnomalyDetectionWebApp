@@ -74,7 +74,7 @@ To get a local copy up and running follow these steps.
    ```
 3. Client side website
     ```sh
-   https://github.com/giladaube/WebClientAnomaliesDetector
+   git clone https://github.com/giladaube/WebClientAnomaliesDetector
    ```
 
 
