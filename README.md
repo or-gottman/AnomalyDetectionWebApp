@@ -72,7 +72,10 @@ To get a local copy up and running follow these steps.
    ```sh
    npm install
    ```
-
+3. Client side website
+    ```sh
+   https://github.com/giladaube/WebClientAnomaliesDetector
+   ```
 
 
 <!-- Features-And-Functionality -->
