@@ -40,7 +40,7 @@ The entire project is written in JavaScript and is divided into 2 main sections:
 1. The client side
 2. A RESTful API handling the logic by interacting with a server that detects anomalies.
 
-![welcome](https://user-images.githubusercontent.com/72923818/119162775-6ee59380-ba63-11eb-887e-2eecd5ccc2a2.jpg)
+
 
 
 
