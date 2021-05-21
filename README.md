@@ -17,7 +17,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#Features-and-functionality">Features and functionality</a></li>
+    <li><a href="#Features-And-Functionality">Features And Functionality</a></li>
     <li><a href="#The-API">The API</a></li>
     <li><a href="#UML">UML</a></li>
     <li><a href="#User-Stories-Video">User Stories Video</a></li>
@@ -71,8 +71,8 @@ To get a local copy up and running follow these steps.
 
 
 
-<!-- Features-and-functionality -->
-## Features and functionality
+<!-- Features-And-Functionality -->
+## Features And Functionality
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
