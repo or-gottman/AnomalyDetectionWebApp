@@ -19,7 +19,7 @@
     </li>
     <li><a href="#Features-and-functionality">Features and functionality</a></li>
     <li><a href="#The-API">The API</a></li>
-    <li><a href="#The-Algo-Server">The algorithm server</a></li>
+    <li><a href="#The-Algorithm-Server">The Algorithm Server</a></li>
     <li><a href="#UML">UML</a></li>
     <li><a href="#User-Stories-Video">User Stories Video</a></li>
   </ol>
@@ -99,8 +99,8 @@ ADD PICTURES AND EXAMPLES HERE!!
 * POST api/anomaly   - This path expects a query parameter containing the unique model ID and the data in the body. The data given in the body is sent to the algorithm server for anomaly detection. It sends back the spans calculated by the algorithm.
 
 
-<!-- The-Algo-Server -->
-##The algorithm server
+<!-- The Algorithm Server -->
+##The Algorithm Server
 
 
 
