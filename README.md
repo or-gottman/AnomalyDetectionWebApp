@@ -68,16 +68,16 @@ To get a local copy up and running follow these steps.
    ```sh
    git clone https://github.com/or-gottman/AnomalyDetectionWebApp
    ```
-2. Install NPM packages
+2. Install NPM packages - Make sure that all libraries (mentioned in the package.json) are installed.
    ```sh
    npm install
    ```
-3. Client side website
+3. Client side website - Once cloned in order to intiate the website please enter: npm start
     ```sh
    git clone https://github.com/giladaube/WebClientAnomaliesDetector
    
    ```
-   Once cloned in order to intiate the website please enter: npm start
+   
 4. Algorithm Server
    ```sh
    git clone https://github.com/y-jacobs/algoServer
