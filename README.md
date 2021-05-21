@@ -32,7 +32,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This web application project provides a friendly to use interface in which a user can upload a file he wishes
+This web application project provides a friendly to use interface in which a user can upload a csv file he wishes
 to train, and another csv file with possible anomalies. The uploaded data is processed by an anomaly detection
 algorithm, and the answers that are sent back from the algorithm are presented to the user in a few
 informative graphs and by spans that specify in which lines the anomalies occurred.
