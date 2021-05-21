@@ -114,7 +114,7 @@ ADD PICTURES AND EXAMPLES HERE!!
 <!-- UML -->
 ## The Client Side
 
-The website is built with react. Each component has it own responsibility and thus we've kept OOP principles throughout the project. The site is built in way that with each render the model's status updates accordingly (if a model was trained previously, with pending status, after the next render the data will update correctly). In addition,
+The website is built with react. Each component has it own responsibility and thus we've kept OOP principles throughout the project. The site is built in way that with each render the model's status updates accordingly (if a model was trained previously, the status will be pending after the next rendering of the site the status will change to ready ). In addition, the client processes the 
 each requ
 <!-- The Algorithm Server -->
 ## The Algorithm Server
