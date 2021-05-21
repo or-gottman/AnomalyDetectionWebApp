@@ -19,8 +19,6 @@
     </li>
     <li><a href="#Features-and-functionality">Features and functionality</a></li>
     <li><a href="#The-API">The API</a></li>
-    <li><a href="#The-Client">The Client Side</a></li>
-    <li><a href="#The-Algorithm-Server">The Algorithm Server</a></li>
     <li><a href="#UML">UML</a></li>
     <li><a href="#User-Stories-Video">User Stories Video</a></li>
   </ol>
@@ -42,9 +40,8 @@ The entire project is written in JavaScript and is divided into 2 main sections:
 
 ### Built With
 
-* [node.js](https://nodejs.org/en/)
-* [react](https://reactjs.org/)
-* [Mongo DB](https://www.mongodb.com/)
+* [node.js]()
+* [react]()
 
 
 
@@ -81,10 +78,11 @@ Use this space to show useful examples of how a project can be used. Additional 
 
 Firstly, the user uploads a csv file to be trained and also specifies which type of algorithm (hybrid/regression) needs to be used by the 
 algorithm server. After the train file is uploaded the user is presented with a notice that a new model has been created, and the time of creation
-is also specified. The user can then upload yet another file containing possible anomalies. The data is processed by the API and passed
+is also specified. At this point, the csv file's data is presented visually in a graph to the user. The user is able to select a feature, in a drop-down menu, and the relevant data will be presented on the graph - in which the Y axis contains values of the selected feature, and the X axis is time.
+The user can then upload yet another file containing possible anomalies. The data is processed by the API and passed
 to the algorithm server for anomaly detection. When the detection is done the algorithm server sends back a message that contains a list of spans for each 2 correlated features.
 The spans are in the format of [start,end] where start is the first line and end is the line after the last line in which the anomalies were found. This list of lines
-is passed to the client side to be presented to the user. Moreover, the information concerning the anomalies is presented graphically in the website....OR CONTINUE FROM HERE!!!!
+is passed to the client side to be presented to the user. Moreover, the information concerning the anomalies is presented graphically in the website. At this point, the user is able to select a feature in the drop-down menu, and the graph will get updated - the X axis will represent the selected feature's values, and the Y axis will represent values of the selected feature's most correlated feature. The points which are anomalous will be colored in red, and the user has the option to show or hide them and the regular points.
 
 
 _For more examples, please refer to the [Documentation](https://example.com)_
@@ -99,22 +97,6 @@ ADD PICTURES AND EXAMPLES HERE!!
 * DELETE api/model  - This path expects a query parameter containing the unique model ID. It deletes the model from the database.
 * GET api/models  - This path sends all the models that were trained and saved in the database. 
 * POST api/anomaly   - This path expects a query parameter containing the unique model ID and the data in the body. The data given in the body is sent to the algorithm server for anomaly detection. It sends back the spans calculated by the algorithm.
-
-
-<!-- The Client Side -->
-## The Client Side
-
-
-<!-- The Algorithm Server -->
-## The Algorithm Server
-
-This server detects anomalies with two different algorithms. The server receives CSV files both for the learning part and the detection part.
-The algo server contains few parts:
-Server- receives and sends data from and to clients that has connected with the program.
-Algo- the algorithms find, based on the ‘train’ CSV, the correlation between the CSV features and calculate the anomalies points bases on the ‘test’ CSV. The data is received and the ‘learn normal’ fids the correlated features in the CSV, each correlated feature is saved. The ‘detect’ finds the points in the ‘train’ CSV that are not suited for the correlation that was found during the ‘learn’.
-The anomaly points are saved, and the client can ask for both list of the points or span of them. The span is calculated that points that are closed together will be featured as one.
- In this project there are two algorithms to find the correlation and find anomalies. Line regression algorithm and Hybrid algorithm that is for both line regression and minimal circle based. There can be any algorithm.
-The data that is received is in CSV format, the Parser extract the relevant data from the file and saves it for further use by the algorithms.
 
 
 <!-- UML -->
