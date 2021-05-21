@@ -113,8 +113,8 @@ The algo server contains a few parts:
 Server- receives and sends data from and to clients that has connected with the program.
 Algo- the algorithms find, based on the ‘train’ CSV, the correlation between the CSV features and calculate the anomalies points bases on the ‘test’ CSV. The data is received and the ‘learn normal’ finds the correlated features in the CSV, each correlated feature is saved. The ‘detect’ finds the points in the ‘train’ CSV that are not suited for the correlation that was found during the ‘learn’.
 The anomaly points are saved, and the client can ask for both list of the points or span of them. The span is calculated that points that are closed together will be featured as one.
- In this project there are two algorithms to find the correlation and find anomalies. Line regression algorithm and Hybrid algorithm that is for both line regression and minimal circle based. There can be any algorithm.
-The data that is received is in CSV format, the Parser extract the relevant data from the file and saves it for further use by the algorithms.
+In this project there are two algorithms that find the correlation and anomalies. Line regression algorithm and Hybrid algorithm that is for both line regression and minimal circle based. Both algorithms can be used.
+The data that is received is in CSV format, the Parser extractד the relevant data from the file and saves it for further use by the algorithms.
 
 <!-- UML -->
 ## UML
