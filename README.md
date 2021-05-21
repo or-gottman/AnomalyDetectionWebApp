@@ -1,4 +1,5 @@
 
+
 <!-- TABLE OF CONTENTS -->
 <details open="open">
   <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
@@ -106,7 +107,8 @@ ADD PICTURES AND EXAMPLES HERE!!
 <!-- UML -->
 ## UML
 
-<img src=" https://github.com/or-gottman/AnomalyDetectionWebApp/UML.jpg">
+![UML](https://user-images.githubusercontent.com/72923818/119115086-6f643700-ba2f-11eb-9689-e8b9c28c10dd.jpg)
+
 
 
 <!-- User-Stories-Video -->
