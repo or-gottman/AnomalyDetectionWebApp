@@ -1,3 +1,4 @@
+![UML](https://user-images.githubusercontent.com/72923818/119128733-b1e14000-ba3e-11eb-8602-67e5ad269dd8.jpg)
 
 
 <!-- TABLE OF CONTENTS -->
@@ -119,7 +120,10 @@ The data that is received is in CSV format, the Parser extracts the relevant dat
 <!-- UML -->
 ## UML
 
-![UML](https://user-images.githubusercontent.com/72923818/119115086-6f643700-ba2f-11eb-9689-e8b9c28c10dd.jpg)
+
+
+![UML](https://user-images.githubusercontent.com/72923818/119128751-b73e8a80-ba3e-11eb-981a-ac317b2f7054.jpg)
+
 
 
 
