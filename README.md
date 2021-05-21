@@ -88,7 +88,7 @@ The spans are in the format of [start,end] where start is the first line and end
 is passed to the client side to be presented to the user. Moreover, the information concerning the anomalies is presented graphically in the website. At this point, the user is able to select a feature in the drop-down menu, and the graph will get updated - the X axis will represent the selected feature's values, and the Y axis will represent values of the selected feature's most correlated feature. The points which are anomalous will be colored in red, and the user has the option to show or hide them and the regular points.
 
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+
 
 ADD PICTURES AND EXAMPLES HERE!!
 
