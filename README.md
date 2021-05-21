@@ -78,7 +78,7 @@ To get a local copy up and running follow these steps.
    
    ```
    
-4. Algorithm Server
+4. Algorithm Server - need to install npm as mentioned before.
    ```sh
    git clone https://github.com/y-jacobs/algoServer
 
