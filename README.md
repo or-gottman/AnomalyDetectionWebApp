@@ -85,7 +85,7 @@ is also specified. At this point, the csv file's data is presented visually in a
 The user can then upload yet another file containing possible anomalies. The data is processed by the API and passed
 to the algorithm server for anomaly detection. When the detection is done the algorithm server sends back a message that contains a list of spans for each 2 correlated features.
 The spans are in the format of [start,end] where start is the first line and end is the line after the last line in which the anomalies were found. This list of lines
-is passed to the client side to be presented to the user. Moreover, the information concerning the anomalies is presented graphically in the website. At this point, the user is able to select a feature in the drop-down menu, and the graph will get updated - the X axis will represent the selected feature's values, and the Y axis will represent values of the selected feature's most correlated feature. The points which are anomalous will be colored in red, and the user has the option to show or hide them and the regular points.
+is passed to the client side to be presented to the user. Moreover, the information concerning the anomalies is presented graphically in the website. At this point, the user is able to select a feature in the drop-down menu, and the graph will get updated - the X axis will represent the selected feature's values, and the Y axis will represent values of the selected feature's most correlated feature. The points which are considered anomalies will be colored in red, and the user has the option to show or hide them and the regular points.
 
 
 
