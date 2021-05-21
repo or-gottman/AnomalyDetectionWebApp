@@ -99,8 +99,11 @@ is passed to the client side to be presented to the user. Moreover, the informat
 
 
 
+![anomaly](https://user-images.githubusercontent.com/72923818/119162262-d7804080-ba62-11eb-9234-e6b6cda96547.jpg)
 
-ADD PICTURES AND EXAMPLES HERE!!
+![pending](https://user-images.githubusercontent.com/72923818/119162286-dc44f480-ba62-11eb-9575-d7b7b24a1648.jpg)
+
+
 
 <!-- The-API -->
 ## The API
