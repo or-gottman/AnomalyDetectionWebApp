@@ -100,7 +100,7 @@ ADD PICTURES AND EXAMPLES HERE!!
 <!-- UML -->
 ## UML
 
-![alt text](https://github.com/[or-gottman]/[AnomalyDetectionWebApp]/UML.jpg?raw=true)
+![alt text](http://url/to/UML.jpg)
 
 
 <!-- User-Stories-Video -->
