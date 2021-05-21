@@ -48,11 +48,10 @@ The entire project is written in JavaScript and is divided into 2 main sections:
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To get a local copy up and running follow these simple steps.
+To get a local copy up and running follow these steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
 * npm
   ```sh
   npm install npm@latest -g
@@ -100,8 +99,8 @@ ADD PICTURES AND EXAMPLES HERE!!
 
 <!-- UML -->
 ## UML
- 
-add UML here!!
+
+![alt text](https://github.com/[or-gottman]/[AnomalyDetectionWebApp]/UML.jpg?raw=true)
 
 
 <!-- User-Stories-Video -->
