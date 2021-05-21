@@ -72,7 +72,7 @@ To get a local copy up and running follow these steps.
    ```sh
    npm install
    ```
-3. Client side website - Once cloned in order to intiate the website please enter: npm start
+3. Client side website - Once cloned in order to initiate the website please enter: npm start
     ```sh
    git clone https://github.com/giladaube/WebClientAnomaliesDetector
    
