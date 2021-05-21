@@ -40,7 +40,7 @@ The entire project is written in JavaScript and is divided into 2 main sections:
 1. The client side
 2. A RESTful API handling the logic by interacting with a server that detects anomalies.
 
-
+![anomaly](https://user-images.githubusercontent.com/72923818/119162262-d7804080-ba62-11eb-9234-e6b6cda96547.jpg)
 
 
 
@@ -102,7 +102,7 @@ is passed to the client side to be presented to the user. Moreover, the informat
 
 
 
-![anomaly](https://user-images.githubusercontent.com/72923818/119162262-d7804080-ba62-11eb-9234-e6b6cda96547.jpg)
+
 
 ![pending](https://user-images.githubusercontent.com/72923818/119162286-dc44f480-ba62-11eb-9575-d7b7b24a1648.jpg)
 
