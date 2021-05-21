@@ -19,6 +19,8 @@
     </li>
     <li><a href="#Features-And-Functionality">Features And Functionality</a></li>
     <li><a href="#The-API">The API</a></li>
+    <li><a href="#The-Client-Side">The Client Side</a></li>
+    <li><a href="#The-Algorithm-Server">The Algorithm Server</a></li>
     <li><a href="#UML">UML</a></li>
     <li><a href="#User-Stories-Video">User Stories Video</a></li>
   </ol>
@@ -98,6 +100,14 @@ ADD PICTURES AND EXAMPLES HERE!!
 * DELETE api/model  - This path expects a query parameter containing the unique model ID. It deletes the model from the database.
 * GET api/models  - This path sends all the models that were trained and saved in the database. 
 * POST api/anomaly   - This path expects a query parameter containing the unique model ID and the data in the body. The data given in the body is sent to the algorithm server for anomaly detection. It sends back the spans calculated by the algorithm.
+
+<!-- UML -->
+## The Client Side
+
+
+
+<!-- The Algorithm Server -->
+## The Algorithm Server
 
 
 <!-- UML -->
