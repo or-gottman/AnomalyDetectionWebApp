@@ -122,7 +122,8 @@ The data that is received is in CSV format, the Parser extracts the relevant dat
 
 
 
-![UML](https://user-images.githubusercontent.com/72923818/119128751-b73e8a80-ba3e-11eb-981a-ac317b2f7054.jpg)
+![UML](https://user-images.githubusercontent.com/72923818/119130472-f79f0800-ba40-11eb-81e2-4ddcb06713fc.jpg)
+
 
 
 
