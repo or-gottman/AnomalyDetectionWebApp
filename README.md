@@ -99,7 +99,7 @@ ADD PICTURES AND EXAMPLES HERE!!
 
 
 
-##The algorithm server
+##The-Algo-Server
 
 
 
