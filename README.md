@@ -98,7 +98,7 @@ ADD PICTURES AND EXAMPLES HERE!!
 * POST api/anomaly   - This path expects a query parameter containing the unique model ID and the data in the body. The data given in the body is sent to the algorithm server for anomaly detection. It sends back the spans calculated by the algorithm.
 
 
-
+<!-- The-Algo-Server -->
 ##The-Algo-Server
 
 
