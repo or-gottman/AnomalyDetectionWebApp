@@ -75,8 +75,14 @@ To get a local copy up and running follow these steps.
 3. Client side website
     ```sh
    git clone https://github.com/giladaube/WebClientAnomaliesDetector
+   
    ```
+4. Algorithm Server
+   ```sh
+   git clone https://github.com/y-jacobs/algoServer
 
+   
+   ```
 
 <!-- Features-And-Functionality -->
 ## Features And Functionality
