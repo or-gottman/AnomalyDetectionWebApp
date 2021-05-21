@@ -77,7 +77,6 @@ To get a local copy up and running follow these steps.
 <!-- Features-And-Functionality -->
 ## Features And Functionality
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
 Firstly, the user uploads a csv file to be trained and also specifies which type of algorithm (hybrid/regression) needs to be used by the 
 algorithm server. After the train file is uploaded the user is presented with a notice that a new model has been created, and the time of creation
