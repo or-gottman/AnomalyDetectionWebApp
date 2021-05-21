@@ -1,3 +1,4 @@
+![UML](https://user-images.githubusercontent.com/72923818/119114992-5a87a380-ba2f-11eb-8c30-b93f8a34b227.jpg)
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
@@ -100,7 +101,8 @@ ADD PICTURES AND EXAMPLES HERE!!
 <!-- UML -->
 ## UML
 
-<img src=" https://github.com/or-gottman/AnomalyDetectionWebApp/UML.jpg">
+![UML](https://user-images.githubusercontent.com/72923818/119115086-6f643700-ba2f-11eb-9689-e8b9c28c10dd.jpg)
+
 
 
 <!-- User-Stories-Video -->
