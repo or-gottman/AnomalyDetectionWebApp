@@ -147,7 +147,8 @@ The data that is received is in CSV format, the Parser extracts the relevant dat
 <!-- User-Stories-Video -->
 ## User Stories Video
 
-add here the video!!!
+https://github.com/or-gottman/AnomalyDetectionWebApp/blob/master/DEMO.mp4
+
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
